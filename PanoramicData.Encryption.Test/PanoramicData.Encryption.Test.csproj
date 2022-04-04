@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PanoramicData.EncryptionService\PanoramicData.Encryption.csproj" />
+    <ProjectReference Include="..\PanoramicData.Encryption\PanoramicData.Encryption.csproj" />
   </ItemGroup>
 
 </Project>
