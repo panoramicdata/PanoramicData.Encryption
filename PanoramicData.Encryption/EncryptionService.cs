@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Globalization;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace PanoramicData.Encryption;
@@ -10,6 +11,7 @@ public class EncryptionService
 	private readonly static RandomNumberGenerator _random = RandomNumberGenerator.Create();
 	private readonly static UTF8Encoding _encoder = new();
 	private readonly static Aes _aes = Aes.Create();
+	private readonly static SHA256 _hashAlgorithm = SHA256.Create();
 
 
 	public EncryptionService(string encryptionKey)
@@ -85,5 +87,46 @@ public class EncryptionService
 			.Where(x => x % 2 == 0)
 			.Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
 			.ToArray();
+	}
+
+	public static string GetHash(string inputString)
+	{
+		ArgumentNullException.ThrowIfNull(inputString, nameof(inputString));
+
+		var sb = new StringBuilder();
+		foreach (var @byte in _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString))) {
+			sb.Append(@byte.ToString("X2", CultureInfo.InvariantCulture));
+		}
+		var result = sb.ToString();
+		return result;
+	}
+
+	/// <summary>
+	/// Returns a measure of entropy represented in a given string, per 
+	/// http://en.wikipedia.org/wiki/Entropy_(information_theory)
+	/// Credit: https://codereview.stackexchange.com/questions/868/calculating-entropy-of-a-string
+	/// </summary>
+	public static double GetShannonEntropy(string text)
+	{
+		ArgumentNullException.ThrowIfNull(text, nameof(text));
+
+		// Create a dictionary of each character and its frequency
+		var characterFrequencyMap = new Dictionary<char, int>();
+		foreach (var @char in text) {
+			if (!characterFrequencyMap.ContainsKey(@char))
+				characterFrequencyMap.Add(@char, 1);
+			else
+				characterFrequencyMap[@char] += 1;
+		}
+
+		// Calculate the entropy
+		var result = 0.0;
+		foreach (var item in characterFrequencyMap) {
+			var frequency = (double)item.Value / text.Length;
+			result -= frequency * (Math.Log(frequency) / Math.Log(2));
+		}
+
+		// Return the result
+		return result;
 	}
 }
