@@ -46,7 +46,7 @@ public class EncryptionService
 		ArgumentNullException.ThrowIfNull(encryptedString, nameof(encryptedString));
 		ArgumentNullException.ThrowIfNull(salt, nameof(salt));
 		if (salt.Length != 32)
-			throw new ArgumentException("Salt must be a 16 character hex string", nameof(salt));
+			throw new ArgumentException("Salt must be a 32 character hex string", nameof(salt));
 
 		var vector = HexStringToByteArray(salt);
 
