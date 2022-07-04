@@ -14,6 +14,11 @@ public class EncryptionService
 	private readonly static SHA256 _hashAlgorithm = SHA256.Create();
 
 
+	/// <summary>
+	/// Created an EncryptionService
+	/// </summary>
+	/// <param name="encryptionKey">A 64 character hex string</param>
+	/// <exception cref="ArgumentException"></exception>
 	public EncryptionService(string encryptionKey)
 	{
 		ArgumentNullException.ThrowIfNull(encryptionKey, nameof(encryptionKey));
