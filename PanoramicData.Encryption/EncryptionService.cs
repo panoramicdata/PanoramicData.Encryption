@@ -23,14 +23,18 @@ public class EncryptionService
 	{
 		ArgumentNullException.ThrowIfNull(encryptionKey, nameof(encryptionKey));
 		if (encryptionKey.Length != 64)
+		{
 			throw new ArgumentException("EncryptionKey must be a 64 character hex string", nameof(encryptionKey));
+		}
 		_key = HexStringToByteArray(encryptionKey);
 	}
 
 	public (string cipherText, string salt) Encrypt(string unencrypted, string? salt = null)
 	{
 		if (salt is not null && salt.Length != 32)
+		{
 			throw new ArgumentException("Salt must be a 32 character hex string", nameof(salt));
+		}
 
 		static byte[] GenerateVector()
 		{
@@ -51,7 +55,9 @@ public class EncryptionService
 		ArgumentNullException.ThrowIfNull(encryptedString, nameof(encryptedString));
 		ArgumentNullException.ThrowIfNull(salt, nameof(salt));
 		if (salt.Length != 32)
+		{
 			throw new ArgumentException("Salt must be a 32 character hex string", nameof(salt));
+		}
 
 		var vector = HexStringToByteArray(salt);
 
@@ -62,10 +68,11 @@ public class EncryptionService
 		return decrypt;
 	}
 
-	private static byte[] Transform(byte[] buffer, ICryptoTransform transform)
+	private static byte[] Transform(byte[] buffer, ICryptoTransform cryptoTransform)
 	{
 		var stream = new MemoryStream();
-		using (var cs = new CryptoStream(stream, transform, CryptoStreamMode.Write)) {
+		using (var cs = new CryptoStream(stream, cryptoTransform, CryptoStreamMode.Write))
+		{
 			cs.Write(buffer, 0, buffer.Length);
 		}
 
@@ -75,7 +82,8 @@ public class EncryptionService
 	private static string ByteArrayToHexString(byte[] byteArray)
 	{
 		var hex = new StringBuilder(byteArray.Length * 2);
-		foreach (var @byte in byteArray) {
+		foreach (var @byte in byteArray)
+		{
 			hex.AppendFormat("{0:x2}", @byte);
 		}
 
@@ -84,7 +92,8 @@ public class EncryptionService
 
 	private static byte[] HexStringToByteArray(string hexString)
 	{
-		if (!hexString.All("0123456789abcdefABCDEF".Contains)) {
+		if (!hexString.All("0123456789abcdefABCDEF".Contains))
+		{
 			throw new ArgumentException("Expected a hexadecimal string.");
 		}
 
@@ -99,7 +108,8 @@ public class EncryptionService
 		ArgumentNullException.ThrowIfNull(inputString, nameof(inputString));
 
 		var sb = new StringBuilder();
-		foreach (var @byte in _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString))) {
+		foreach (var @byte in _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString)))
+		{
 			sb.Append(@byte.ToString("X2", CultureInfo.InvariantCulture));
 		}
 		var result = sb.ToString();
@@ -107,7 +117,7 @@ public class EncryptionService
 	}
 
 	/// <summary>
-	/// Returns a measure of entropy represented in a given string, per 
+	/// Returns a measure of entropy represented in a given string, per
 	/// http://en.wikipedia.org/wiki/Entropy_(information_theory)
 	/// Credit: https://codereview.stackexchange.com/questions/868/calculating-entropy-of-a-string
 	/// </summary>
@@ -119,14 +129,19 @@ public class EncryptionService
 		var characterFrequencyMap = new Dictionary<char, int>();
 		foreach (var @char in text) {
 			if (!characterFrequencyMap.ContainsKey(@char))
+			{
 				characterFrequencyMap.Add(@char, 1);
+			}
 			else
+			{
 				characterFrequencyMap[@char] += 1;
+			}
 		}
 
 		// Calculate the entropy
 		var result = 0.0;
-		foreach (var item in characterFrequencyMap) {
+		foreach (var item in characterFrequencyMap)
+		{
 			var frequency = (double)item.Value / text.Length;
 			result -= frequency * (Math.Log(frequency) / Math.Log(2));
 		}
