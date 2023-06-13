@@ -160,9 +160,9 @@ public class EncryptionTests
 	public void WrongEncryptionKey_ReturnsNull()
 	{
 		// Using the wrong encryption key should fail
-		var result2 = _badSecurityService
-			.Invoking(ss => ss.Decrypt(_cipherText, _salt))
-			.Should()
-			.Throw<CryptographicException>();
+		_ = _badSecurityService
+		   .Invoking(ss => ss.Decrypt(_cipherText, _salt))
+		   .Should()
+		   .Throw<CryptographicException>();
 	}
 }

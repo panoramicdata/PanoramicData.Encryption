@@ -46,7 +46,7 @@ public class ShannonEntropyTests
 	public void GetShannonEntropy_Null_Throws()
 	{
 		// Using the wrong encryption key should fail
-		var result2 = string.Empty
+		_ = string.Empty
 			.Invoking(ss => EncryptionService.GetShannonEntropy(null!))
 			.Should()
 			.Throw<ArgumentNullException>();

@@ -50,7 +50,7 @@ public class HashingTests
 	public void Hash_Null_Throws()
 	{
 		// Using the wrong encryption key should fail
-		var result2 = string.Empty
+		_ = string.Empty
 			.Invoking(ss => EncryptionService.GetHash(null!))
 			.Should()
 			.Throw<ArgumentNullException>();
