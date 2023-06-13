@@ -22,10 +22,10 @@ public class EncryptionService
 	public EncryptionService(string encryptionKey)
 	{
 		ArgumentNullException.ThrowIfNull(encryptionKey, nameof(encryptionKey));
-		if (encryptionKey.Length != 64)
-		{
+		if (encryptionKey.Length != 64) {
 			throw new ArgumentException("EncryptionKey must be a 64 character hex string", nameof(encryptionKey));
 		}
+
 		_key = HexStringToByteArray(encryptionKey);
 	}
 
@@ -56,8 +56,7 @@ public class EncryptionService
 	{
 		ArgumentNullException.ThrowIfNull(encryptedString, nameof(encryptedString));
 		ArgumentNullException.ThrowIfNull(salt, nameof(salt));
-		if (salt.Length != 32)
-		{
+		if (salt.Length != 32) {
 			throw new ArgumentException("Salt must be a 32 character hex string", nameof(salt));
 		}
 
@@ -73,8 +72,7 @@ public class EncryptionService
 	private static byte[] Transform(byte[] buffer, ICryptoTransform cryptoTransform)
 	{
 		var stream = new MemoryStream();
-		using (var cs = new CryptoStream(stream, cryptoTransform, CryptoStreamMode.Write))
-		{
+		using (var cs = new CryptoStream(stream, cryptoTransform, CryptoStreamMode.Write)) {
 			cs.Write(buffer, 0, buffer.Length);
 		}
 
@@ -84,8 +82,7 @@ public class EncryptionService
 	private static string ByteArrayToHexString(byte[] byteArray)
 	{
 		var hex = new StringBuilder(byteArray.Length * 2);
-		foreach (var @byte in byteArray)
-		{
+		foreach (var @byte in byteArray) {
 			hex.AppendFormat("{0:x2}", @byte);
 		}
 
@@ -94,8 +91,7 @@ public class EncryptionService
 
 	private static byte[] HexStringToByteArray(string hexString)
 	{
-		if (!hexString.All("0123456789abcdefABCDEF".Contains))
-		{
+		if (!hexString.All("0123456789abcdefABCDEF".Contains)) {
 			throw new ArgumentException("Expected a hexadecimal string.");
 		}
 
@@ -110,8 +106,7 @@ public class EncryptionService
 		ArgumentNullException.ThrowIfNull(inputString, nameof(inputString));
 
 		var sb = new StringBuilder();
-		foreach (var @byte in _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString)))
-		{
+		foreach (var @byte in _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString))) {
 			sb.Append(@byte.ToString("X2", CultureInfo.InvariantCulture));
 		}
 		var result = sb.ToString();
@@ -130,20 +125,17 @@ public class EncryptionService
 		// Create a dictionary of each character and its frequency
 		var characterFrequencyMap = new Dictionary<char, int>();
 		foreach (var @char in text) {
-			if (!characterFrequencyMap.ContainsKey(@char))
-			{
+			if (!characterFrequencyMap.ContainsKey(@char)) {
 				characterFrequencyMap.Add(@char, 1);
 			}
-			else
-			{
+			else {
 				characterFrequencyMap[@char] += 1;
 			}
 		}
 
 		// Calculate the entropy
 		var result = 0.0;
-		foreach (var item in characterFrequencyMap)
-		{
+		foreach (var item in characterFrequencyMap) {
 			var frequency = (double)item.Value / text.Length;
 			result -= frequency * (Math.Log(frequency) / Math.Log(2));
 		}
