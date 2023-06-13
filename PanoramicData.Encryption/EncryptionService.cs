@@ -29,27 +29,25 @@ public class EncryptionService
 		_key = HexStringToByteArray(encryptionKey);
 	}
 
-	public (string cipherText, string salt) Encrypt(string unencrypted)
+	public (string cipherText, string salt) Encrypt(string unencrypted, string? salt = null)
 	{
-		return Encrypt(unencrypted, GenerateVector());
-	}
-
-	public (string cipherText, string salt) Encrypt(string unencrypted, string salt)
-	{
-		if (salt.Length != 32) {
+		if (salt is not null && salt.Length != 32)
+		{
 			throw new ArgumentException("Salt must be a 32 character hex string", nameof(salt));
 		}
 
-		var vector = HexStringToByteArray(salt);
+		static byte[] GenerateVector()
+		{
+			var vector = new byte[16];
+			_random.GetBytes(vector);
+			return vector;
+		}
+
+		var vector = salt is null
+				? GenerateVector()
+				: HexStringToByteArray(salt);
 		var encryptor = _aes.CreateEncryptor(_key, vector);
 		return (ByteArrayToHexString(Transform(_encoder.GetBytes(unencrypted), encryptor)), ByteArrayToHexString(vector));
-	}
-
-	private string GenerateVector()
-	{
-		var vector = new byte[16];
-		_random.GetBytes(vector);
-		return ByteArrayToHexString(vector);
 	}
 
 	public string Decrypt(string encryptedString, string salt)
