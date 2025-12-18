@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
@@ -9,7 +9,7 @@
 		<AnalysisMode>All</AnalysisMode>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Description>A simple-to-use encryption service.</Description>
-		<Copyright>Panoramic Data Limited 2022</Copyright>
+		<Copyright>Panoramic Data Limited 2025</Copyright>
 		<PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.Encryption</PackageProjectUrl>
 		<PackageIcon>PanoramicData.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -29,15 +29,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="IDisposableAnalyzers" Version="4.0.2">
+		<PackageReference Include="IDisposableAnalyzers" Version="4.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Nerdbank.GitVersioning" Version="3.5.107">
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.3">
+		<PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.7">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

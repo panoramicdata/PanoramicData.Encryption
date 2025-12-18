@@ -100,10 +100,9 @@ public class EncryptionService
 			throw new ArgumentException("Expected a hexadecimal string.");
 		}
 
-		return Enumerable.Range(0, hexString.Length)
+		return [.. Enumerable.Range(0, hexString.Length)
 			.Where(x => x % 2 == 0)
-			.Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
-			.ToArray();
+			.Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))];
 	}
 
 	public static string GetHash(string inputString)
@@ -130,10 +129,7 @@ public class EncryptionService
 		// Create a dictionary of each character and its frequency
 		var characterFrequencyMap = new Dictionary<char, int>();
 		foreach (var @char in text) {
-			if (!characterFrequencyMap.ContainsKey(@char)) {
-				characterFrequencyMap.Add(@char, 1);
-			}
-			else {
+			if (!characterFrequencyMap.TryAdd(@char, 1)) {
 				characterFrequencyMap[@char] += 1;
 			}
 		}
