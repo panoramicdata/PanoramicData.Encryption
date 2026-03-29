@@ -1,5 +1,7 @@
 # PanoramicData.Encryption
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e2404bd1f41c4a04885aff717235e340)](https://app.codacy.com/gh/panoramicdata/PanoramicData.Encryption/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 Although you could use the nuget package, why would you trust it?
 Better to read and understand and copy the source into your project.
 

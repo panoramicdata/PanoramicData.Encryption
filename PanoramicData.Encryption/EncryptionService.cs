@@ -35,6 +35,7 @@ public class EncryptionService
 		return vector;
 	}
 
+	#pragma warning disable CA5401 // Symmetric encryption uses non-default initialization vector, which could be potentially repeatable
 	public (string cipherText, string salt) Encrypt(string unencrypted)
 	{
 		var vector = GenerateVector();
@@ -56,6 +57,7 @@ public class EncryptionService
 		var encryptor = _aes.CreateEncryptor(_key, vector);
 		return (ByteArrayToHexString(Transform(_encoder.GetBytes(unencrypted), encryptor)), ByteArrayToHexString(vector));
 	}
+#pragma warning restore CA5401
 
 	public string Decrypt(string encryptedString, string salt)
 	{
@@ -88,7 +90,7 @@ public class EncryptionService
 	{
 		var hex = new StringBuilder(byteArray.Length * 2);
 		foreach (var @byte in byteArray) {
-			hex.AppendFormat("{0:x2}", @byte);
+			hex.AppendFormat(CultureInfo.InvariantCulture, "{0:x2}", @byte);
 		}
 
 		return hex.ToString();
