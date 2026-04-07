@@ -1,3 +1,5 @@
+root = true
+
 # Rules in this file were initially inferred by Visual Studio IntelliCode from the C:\Users\david\Projects\PanoramicData.EncryptionService codebase based on best match to current usage at 04/04/2022
 # You can modify the rules from these initially generated values to suit your own policies
 # You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
@@ -167,3 +169,4 @@ dotnet_naming_style.pascal_case.required_suffix =
 dotnet_naming_style.pascal_case.word_separator =
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 indent_style = tab
+csharp_style_namespace_declarations = file_scoped:error

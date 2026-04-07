@@ -4,6 +4,9 @@ using System.Text;
 
 namespace PanoramicData.Encryption;
 
+/// <summary>
+/// Provides AES encryption, decryption, hashing, and entropy services.
+/// </summary>
 public class EncryptionService
 {
 	private readonly byte[] _key;
@@ -36,6 +39,11 @@ public class EncryptionService
 	}
 
 	#pragma warning disable CA5401 // Symmetric encryption uses non-default initialization vector, which could be potentially repeatable
+	/// <summary>
+	/// Encrypts the specified string using a randomly generated salt.
+	/// </summary>
+	/// <param name="unencrypted">The plaintext string to encrypt.</param>
+	/// <returns>A tuple containing the cipher text and the generated salt, both as hex strings.</returns>
 	public (string cipherText, string salt) Encrypt(string unencrypted)
 	{
 		var vector = GenerateVector();
@@ -43,6 +51,13 @@ public class EncryptionService
 		return (ByteArrayToHexString(Transform(_encoder.GetBytes(unencrypted), encryptor)), ByteArrayToHexString(vector));
 	}
 
+	/// <summary>
+	/// Encrypts the specified string using the provided salt, or a randomly generated one if null.
+	/// </summary>
+	/// <param name="unencrypted">The plaintext string to encrypt.</param>
+	/// <param name="salt">A 32-character hex string to use as the initialization vector, or null to generate one.</param>
+	/// <returns>A tuple containing the cipher text and the salt, both as hex strings.</returns>
+	/// <exception cref="ArgumentException">Thrown when salt is not a 32-character hex string.</exception>
 	public (string cipherText, string salt) Encrypt(string unencrypted, string? salt)
 	{
 		if (salt is null) {
@@ -59,6 +74,14 @@ public class EncryptionService
 	}
 #pragma warning restore CA5401
 
+	/// <summary>
+	/// Decrypts the specified encrypted hex string using the provided salt.
+	/// </summary>
+	/// <param name="encryptedString">The encrypted string as a hex string.</param>
+	/// <param name="salt">A 32-character hex string used as the initialization vector.</param>
+	/// <returns>The decrypted plaintext string.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when encryptedString or salt is null.</exception>
+	/// <exception cref="ArgumentException">Thrown when salt is not a 32-character hex string.</exception>
 	public string Decrypt(string encryptedString, string salt)
 	{
 		ArgumentNullException.ThrowIfNull(encryptedString, nameof(encryptedString));
@@ -107,6 +130,12 @@ public class EncryptionService
 			.Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))];
 	}
 
+	/// <summary>
+	/// Computes a SHA-256 hash of the specified string.
+	/// </summary>
+	/// <param name="inputString">The string to hash.</param>
+	/// <returns>The SHA-256 hash as an uppercase hex string.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when inputString is null.</exception>
 	public static string GetHash(string inputString)
 	{
 		ArgumentNullException.ThrowIfNull(inputString, nameof(inputString));
