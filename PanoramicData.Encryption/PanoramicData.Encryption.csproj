@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>A simple-to-use encryption service.</Description>
     <PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.Encryption</PackageProjectUrl>
-    <PackageIcon>PanoramicData.png</PackageIcon>
+    <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/panoramicdata/PanoramicData.Encryption</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -43,7 +43,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Update="PanoramicData.png">
+    <None Update="Logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
