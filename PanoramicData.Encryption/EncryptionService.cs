@@ -11,10 +11,11 @@ public class EncryptionService
 {
 	private readonly byte[] _key;
 
-	private readonly static RandomNumberGenerator _random = RandomNumberGenerator.Create();
+	// UTF8Encoding is stateless for GetBytes/GetString and is safe to share across threads.
+	// No HashAlgorithm, SymmetricAlgorithm, ICryptoTransform or RandomNumberGenerator instance is
+	// shared: those types are not thread-safe (OPS-157454), so each call uses a static one-shot
+	// API or its own short-lived instance.
 	private readonly static UTF8Encoding _encoder = new();
-	private readonly static Aes _aes = Aes.Create();
-	private readonly static SHA256 _hashAlgorithm = SHA256.Create();
 
 
 	/// <summary>
@@ -33,9 +34,7 @@ public class EncryptionService
 
 	private static byte[] GenerateVector()
 	{
-		var vector = new byte[16];
-		_random.GetBytes(vector);
-		return vector;
+		return RandomNumberGenerator.GetBytes(16);
 	}
 
 	#pragma warning disable CA5401 // Symmetric encryption uses non-default initialization vector, which could be potentially repeatable
@@ -47,7 +46,8 @@ public class EncryptionService
 	public (string cipherText, string salt) Encrypt(string unencrypted)
 	{
 		var vector = GenerateVector();
-		var encryptor = _aes.CreateEncryptor(_key, vector);
+		using var aes = Aes.Create();
+		using var encryptor = aes.CreateEncryptor(_key, vector);
 		return (ByteArrayToHexString(Transform(_encoder.GetBytes(unencrypted), encryptor)), ByteArrayToHexString(vector));
 	}
 
@@ -69,7 +69,8 @@ public class EncryptionService
 		}
 
 		var vector = HexStringToByteArray(salt);
-		var encryptor = _aes.CreateEncryptor(_key, vector);
+		using var aes = Aes.Create();
+		using var encryptor = aes.CreateEncryptor(_key, vector);
 		return (ByteArrayToHexString(Transform(_encoder.GetBytes(unencrypted), encryptor)), ByteArrayToHexString(vector));
 	}
 #pragma warning restore CA5401
@@ -94,7 +95,8 @@ public class EncryptionService
 
 		var encrypted = HexStringToByteArray(encryptedString);
 
-		var decryptor = _aes.CreateDecryptor(_key, vector);
+		using var aes = Aes.Create();
+		using var decryptor = aes.CreateDecryptor(_key, vector);
 		var decrypt = _encoder.GetString(Transform(encrypted, decryptor));
 		return decrypt;
 	}
@@ -140,12 +142,9 @@ public class EncryptionService
 	{
 		ArgumentNullException.ThrowIfNull(inputString, nameof(inputString));
 
-		var sb = new StringBuilder();
-		foreach (var @byte in _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString))) {
-			sb.Append(@byte.ToString("X2", CultureInfo.InvariantCulture));
-		}
-		var result = sb.ToString();
-		return result;
+		// SHA256.HashData is a stateless one-shot API and is safe to call from any thread.
+		// Convert.ToHexString emits uppercase hex, identical to the previous "X2" formatting.
+		return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(inputString)));
 	}
 
 	/// <summary>
