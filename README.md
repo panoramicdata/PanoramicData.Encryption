@@ -9,6 +9,8 @@
 Although you could use the nuget package, why would you trust it?
 Better to read and understand and copy the source into your project.
 
+Supports .NET 11.0.
+
 Seriously, there's only one file.  Copy it.  It's [here](https://raw.githubusercontent.com/panoramicdata/PanoramicData.Encryption/main/PanoramicData.Encryption/EncryptionService.cs).
 
 To use:
