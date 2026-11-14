@@ -6,6 +6,8 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e2404bd1f41c4a04885aff717235e340)](https://app.codacy.com/gh/panoramicdata/PanoramicData.Encryption/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
+> **Need help with APIs or .NET?** Panoramic Data are experts in APIs and .NET, and we can help with your development. [Contact us](https://www.panoramicdata.com/contact-us) or see our [software services](https://www.panoramicdata.com/services/software).
+
 Although you could use the nuget package, why would you trust it?
 Better to read and understand and copy the source into your project.
 
